@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>タスク管理アプリケーション</title>
+<!--    <link th:href="@{/home.css}" rel="stylesheet">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+<h1>タスク管理アプリケーション</h1>
+<div class="task_form">
+    <h2>タスクの登録</h2>
+    <form action="/add">
+        <label class="form-label">タスク</label>
+        <input name="task" class="form-control"　type="text" />
+        <label class="form-label">期限</label>
+        <input class="form-control" name="deadline" type="date" />
+        <input type="submit" value="登録" />
+    </form>
+</div>
+<div>
+    <h2>現在のタスク一覧</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="hidden">ID</th>
+                <th>タスク</th>
+                <th>期限</th>
+                <th>状態</th>
+                <th>削除<!-- 削除ボタン --></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${taskList}">
+                <td th:text="${task.id}" class="hidden"></td>
+                <td th:text="${task.task}"></td>
+                <td th:text="${task.deadline}"></td>
+                <td th:text="${task.done} ? '完' : '未'"></td>
+                <td>
+                    <button type="submit" id="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="btn btn-primary">更新</button>
+
+<!--                    <button type="submit" id="update_button" onclick="-->
+<!--                        let row=this.parentElement.parentElement;-->
+<!--                        getElementById('update_id').value = row.cells[0].firstChild.data;-->
+<!--                        getElementById('update_task').value = row.cells[1].firstChild.data;-->
+<!--                        getElementById('update_deadline').value = row.cells[2].firstChild.data;-->
+<!--                        getElementById('update_status').selectedIndex=(row.cells[3].firstChild.data=='完了')?1:0;-->
+<!--                        var dialog = getElementById('updatedialog');-->
+<!--                        dialog.style.left= ((window.innerWidth - 500) / 2) + 'px';-->
+<!--                        dialog.style.display='block';">更新</button>-->
+                </td>
+                <td>
+                    <form action="/delete">
+                        <button type="submit" id="delete_button" class="btn btn-secondary">削除</button>
+                        <input type="hidden" name="id" th:value="${task.id}" />
+                    </form>
+                </td>
+        </tbody>
+    </table>
+</div>
+<div id="updatedialog" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/update">
+                <div class="modal-header">
+                    <h2>タスクの更新</h2>
+                </div>
+                <div class="modal-body">
+                    <input id="update_id" name="id" type="hidden"/>
+                    <label for="update_task">タスク</label>
+                    <input id="update_task" class="form-control" name="task" type="text"/>
+                    <label for="update_deadline">期限</label>
+                    <input id="update_deadline" class="form-control" name="deadline" type="date"/>
+                    <label for="update_status">状態</label>
+                    <select id="update_status" class="form-select" name="done">
+                        <option value="false">未完了</option>
+                        <option value="true">完了</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">更新</button>
+                    <button type="reset" data-bs-dismiss="modal" class="btn btn-secondary">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script language="JavaScript">
+    function copyToDialog(row){
+        document.getElementById('update_id').value = row.cells[0].firstChild.data;
+        document.getElementById('update_task').value = row.cells[1].firstChild.data;
+        document.getElementById('update_deadline').value = row.cells[2].firstChild.data;
+        document.getElementById('update_status').selectedIndex=(row.cells[3].firstChild.data=='完了')?1:0;
+<!--        var dialog = document.getElementById('updatedialog');-->
+<!--        dialog.style.left= ((window.innerWidth - 500) / 2) + 'px';-->
+<!--        dialog.style.display='block';-->
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+</body>
+</html>
