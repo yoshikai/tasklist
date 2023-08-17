@@ -44,7 +44,6 @@ public class HomeController {
         String id = UUID.randomUUID().toString().substring(0, 8);
         TaskItem item = new TaskItem(id, task, deadline, false);
         this.dao.add(item);
-//        taskItems.add(item);
         return "redirect:/list";
     }
 
