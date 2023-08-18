@@ -21,12 +21,11 @@ public class HomeRestController {
     }
 
     @PostMapping("/rest_add")
-    String addItem(@RequestParam("task") String task,
-                   @RequestParam("deadline") String deadLine){
+    List<HomeController.TaskItem> addItem(@RequestParam("task") String task,
+                                          @RequestParam("deadline") String deadLine){
         String id = UUID.randomUUID().toString().substring(0, 8);
         HomeController.TaskItem item = new HomeController.TaskItem(id, task, deadLine, false);
         this.dao.add(item);
-
-        return "";
+        return this.dao.findAll();
     }
 }
