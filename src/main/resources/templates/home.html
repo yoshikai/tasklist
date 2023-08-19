@@ -23,7 +23,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th class="hidden">ID</th>
+                <th>ID</th>
                 <th>タスク</th>
                 <th>期限</th>
                 <th>状態</th>
@@ -32,7 +32,7 @@
         </thead>
         <tbody id="task_list_body">
             <tr th:each="task : ${taskList}">
-                <td th:text="${task.id}" class="hidden"></td>
+                <td th:text="${task.id}"></td>
                 <td th:text="${task.task}"></td>
                 <td th:text="${task.deadline}"></td>
                 <td th:text="${task.done} ? '完' : '未'"></td>
@@ -103,7 +103,11 @@
           url: "/rest_add",
           data: { task: new_task, deadline: new_deadline }
         }).done(function( msg ) {
-          var str = JSON.stringify(msg);
+          try {
+            const test = JSON.parse(msg);
+          } catch (error) {
+            alert(error);
+          }
           $("#task_list_body").empty();   //テーブルクリア
           for(var i=0; i<msg.length; i++){
             var id = msg[i].id;
@@ -113,29 +117,33 @@
 
             $obj = $("#table_row").clone();  //追加する行のデータをコピー
             //ここにid,task,deadline,doneのセット処理を記述
+            $obj.find("[name=id]").text(id);
             $obj.find("[name=task]").text(task);
             $obj.find("[name=deadline]").text(deadline);
+            //完了・未完了を三項演算子でセット
+            $obj.find("[name=done]").text(done ? "完了" : "未完了");
+            //ボタンに付加されていたグローバル属性のhiddenを削除してボタン用を見えるように修正
+            $obj.find("button").removeAttr('hidden');
             $("#task_list_body").append($obj); //テーブルに行を追加
           }
-
-
         });
     }
 </script>
-<div style="display:hidden">
+<div hidden>
     <table>
         <tbody>
             <tr id="table_row">
-                <td class="hidden"></td>
+                <td name="id"></td>
                 <td name="task"></td>
                 <td name="deadline"></td>
                 <td name="done"></td>
                 <td>
-                    <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="btn btn-primary">更新</button>
+                    <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="btn btn-primary" hidden>更新</button>
                 </td>
                 <td>
                     <form action="/delete">
-                        <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
+                        <!-- hidden属性を付加してボタンが消えてなかった対応 -->
+                        <button type="submit" name="delete_button" class="btn btn-secondary" hidden>削除</button>
                         <input type="hidden" name="id" />
                     </form>
                 </td>
