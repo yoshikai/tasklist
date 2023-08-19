@@ -27,7 +27,7 @@
                 <th>タスク</th>
                 <th>期限</th>
                 <th>状態</th>
-                <th>削除<!-- 削除ボタン --></th>
+                <th class="col-2">更新・削除</th>
             </tr>
         </thead>
         <tbody id="task_list_body">
@@ -37,13 +37,17 @@
                 <td th:text="${task.deadline}"></td>
                 <td th:text="${task.done} ? '完' : '未'"></td>
                 <td>
-                    <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="btn btn-primary">更新</button>
-                </td>
-                <td>
-                    <form action="/delete">
-                        <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
-                        <input type="hidden" name="id" th:value="${task.id}" />
-                    </form>
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm">更新</button>
+                        </div>
+                        <div class="col">
+                            <form action="/delete">
+                                <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm">削除</button>
+                                <input type="hidden" name="id" th:value="${task.id}" />
+                            </form>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -103,11 +107,6 @@
           url: "/rest_add",
           data: { task: new_task, deadline: new_deadline }
         }).done(function( msg ) {
-          try {
-            const test = JSON.parse(msg);
-          } catch (error) {
-            alert(error);
-          }
           $("#task_list_body").empty();   //テーブルクリア
           for(var i=0; i<msg.length; i++){
             var id = msg[i].id;
@@ -138,14 +137,18 @@
                 <td name="deadline"></td>
                 <td name="done"></td>
                 <td>
-                    <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="btn btn-primary" hidden>更新</button>
-                </td>
-                <td>
-                    <form action="/delete">
-                        <!-- hidden属性を付加してボタンが消えてなかった対応 -->
-                        <button type="submit" name="delete_button" class="btn btn-secondary" hidden>削除</button>
-                        <input type="hidden" name="id" />
-                    </form>
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm" hidden>更新</button>
+                        </div>
+                        <div class="col">
+                            <form action="/delete">
+                                <!-- hidden属性を付加してボタンが消えてなかった対応 -->
+                                <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm" hidden>削除</button>
+                                <input type="hidden" name="id" />
+                            </form>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </tbody>
