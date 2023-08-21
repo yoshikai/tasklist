@@ -136,14 +136,15 @@
                 <td name="deadline"></td>
                 <td name="memo"></td>
                 <td name="done"></td>
+                <td> <!-- ボタン要素にhidden属性を付加して消えてなかった対応 -->
+                    <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm" hidden>更新</button>
+                </td>
                 <td>
-                    <div class="float-left">
-                        <!-- ボタン要素にhidden属性を付加して消えてなかった対応 -->
-                        <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm" hidden>更新</button>
-                        <form action="/delete">
-                            <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm" hidden>削除</button>
-                            <input type="hidden" name="id" />
-                        </form>
+                </td>
+                    <form action="/delete">
+                        <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm" hidden>削除</button>
+                        <input type="hidden" name="id" />
+                    </form>
                     </div>
                 </td>
             </tr>
