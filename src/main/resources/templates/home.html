@@ -26,28 +26,27 @@
                 <th>ID</th>
                 <th>タスク</th>
                 <th>期限</th>
+                <th>メモ</th>
                 <th>状態</th>
-                <th class="col-2">更新・削除</th>
+                <th style="colspan:2">更新・削除</th>
             </tr>
         </thead>
         <tbody id="task_list_body">
-            <tr th:each="task : ${taskList}">
+            <tr th:each="task : ${taskList}" name="task_list_row">
                 <td th:text="${task.id}"></td>
                 <td th:text="${task.task}"></td>
                 <td th:text="${task.deadline}"></td>
+                <td th:text="${task.memo}"></td>
                 <td th:text="${task.done} ? '完' : '未'"></td>
                 <td>
-                    <div class="row">
-                        <div class="col">
-                            <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm">更新</button>
-                        </div>
-                        <div class="col">
-                            <form action="/delete">
-                                <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm">削除</button>
-                                <input type="hidden" name="id" th:value="${task.id}" />
-                            </form>
-                        </div>
-                    </div>
+                    <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm">更新</button>
+                </td>
+                <td>
+                    <form action="/delete">
+                        <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm">削除</button>
+                        <input type="hidden" name="id" th:value="${task.id}" />
+                    </form>
+
                 </td>
             </tr>
         </tbody>
@@ -66,6 +65,8 @@
                     <input id="update_task" class="form-control" name="task" type="text"/>
                     <label for="update_deadline">期限</label>
                     <input id="update_deadline" class="form-control" name="deadline" type="date"/>
+                    <label for="update_memo">メモ</label>
+                    <input id="update_memo" class="form-control" name="memo" type="text"/>
                     <label for="update_status">状態</label>
                     <select id="update_status" class="form-select" name="done">
                         <option value="false">未完了</option>
@@ -83,29 +84,27 @@
 
 <script language="JavaScript">
     function copyToDialog(row){
-        document.getElementById('update_id').value = row.cells[0].firstChild.data;
-        document.getElementById('update_task').value = row.cells[1].firstChild.data;
-        document.getElementById('update_deadline').value = row.cells[2].firstChild.data;
-        document.getElementById('update_status').selectedIndex=(row.cells[3].firstChild.data=='完了')?1:0;
-<!--        var dialog = document.getElementById('updatedialog');-->
-<!--        dialog.style.left= ((window.innerWidth - 500) / 2) + 'px';-->
-<!--        dialog.style.display='block';-->
+        var children = $(row).children();
+        $('#update_id').val($(children)[0].textContent);
+        $('#update_task').val($(children)[1].textContent);
+        $('#update_deadline').val($(children)[2].textContent);
+        $('#update_memo').val($(children)[3].textContent);
+        $('#update_status').selectedIndex=($(children)[4].textContent=='完了')?1:0;
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
 <script>
-<!--    $(document).ready(function() {-->
-<!--        alert("Hello world");-->
-<!--    });-->
+
     function restAdd(){
         var new_task = $("#new_task").val();
         var new_deadline = $("#new_deadline").val();
+        var new_memo = $("#new_memo").val();
         $.ajax({
           type: "POST",
           url: "/rest_add",
-          data: { task: new_task, deadline: new_deadline }
+          data: { task: new_task, deadline: new_deadline, memo: new_memo }
         }).done(function( msg ) {
           $("#task_list_body").empty();   //テーブルクリア
           for(var i=0; i<msg.length; i++){
@@ -135,19 +134,16 @@
                 <td name="id"></td>
                 <td name="task"></td>
                 <td name="deadline"></td>
+                <td name="memo"></td>
                 <td name="done"></td>
                 <td>
-                    <div class="row">
-                        <div class="col">
-                            <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm" hidden>更新</button>
-                        </div>
-                        <div class="col">
-                            <form action="/delete">
-                                <!-- hidden属性を付加してボタンが消えてなかった対応 -->
-                                <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm" hidden>削除</button>
-                                <input type="hidden" name="id" />
-                            </form>
-                        </div>
+                    <div class="float-left">
+                        <!-- ボタン要素にhidden属性を付加して消えてなかった対応 -->
+                        <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm" hidden>更新</button>
+                        <form action="/delete">
+                            <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm" hidden>削除</button>
+                            <input type="hidden" name="id" />
+                        </form>
                     </div>
                 </td>
             </tr>
