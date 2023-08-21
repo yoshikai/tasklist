@@ -40,6 +40,7 @@ public class TaskListDao {
                         row.get("id").toString(),
                         row.get("task").toString(),
                         row.get("deadline").toString(),
+                        row.get("memo").toString(),
                         (Boolean)row.get("done")
 
                 )).toList();
@@ -52,9 +53,10 @@ public class TaskListDao {
     }
 
     public int update(HomeController.TaskItem taskItem){
-        int number = jdbcTemplate.update("update tasklist set task=?, deadline=?, done=? where id = ?",
+        int number = jdbcTemplate.update("update tasklist set task=?, deadline=?, memo=?, done=? where id = ?",
                 taskItem.task(),
                 taskItem.deadline(),
+                taskItem.memo(),
                 taskItem.done(),
                 taskItem.id());
         return number;

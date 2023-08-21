@@ -28,7 +28,7 @@ public class HomeController {
         return "hello";
     }
 
-    record TaskItem(String id, String task,String deadline, boolean done){}
+    record TaskItem(String id, String task,String deadline, String memo, boolean done){}
 //    private List<TaskItem> taskItems = new ArrayList<>();
 
     @GetMapping("/list")
@@ -42,7 +42,7 @@ public class HomeController {
     String addItem(@RequestParam("task") String task,
                    @RequestParam("deadline") String deadline){
         String id = UUID.randomUUID().toString().substring(0, 8);
-        TaskItem item = new TaskItem(id, task, deadline, false);
+        TaskItem item = new TaskItem(id, task, deadline, "",false);
         this.dao.add(item);
         return "redirect:/list";
     }
@@ -57,9 +57,10 @@ public class HomeController {
     String update(@RequestParam("id") String id,
                   @RequestParam("task") String task,
                   @RequestParam("deadline") String deadline,
+                  @RequestParam("memo") String memo,
                   @RequestParam("done") boolean done){
-        TaskItem item = new TaskItem(id, task, deadline, done);
-        this.dao.update(item);
+        TaskItem item = new TaskItem(id, task, deadline, memo, done);
+        int i = this.dao.update(item);
         return "redirect:/list";
     }
 }
