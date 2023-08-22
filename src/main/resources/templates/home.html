@@ -20,6 +20,16 @@
 </div>
 <div>
     <h2>現在のタスク一覧</h2>
+    <div>
+        <form action="/search_month">
+            <div class="row">
+                <div class="col"><input type="month" name="month"/></div>
+                <div class="col">
+                    <button type="submit" name="search_button" class="col btn btn-secondary btn-sm">検索</button>
+                </div>
+            </div>
+        </form>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -46,7 +56,6 @@
                         <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm">削除</button>
                         <input type="hidden" name="id" th:value="${task.id}" />
                     </form>
-
                 </td>
             </tr>
         </tbody>
@@ -145,7 +154,6 @@
                         <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm" hidden>削除</button>
                         <input type="hidden" name="id" />
                     </form>
-                    </div>
                 </td>
             </tr>
         </tbody>
