@@ -63,4 +63,11 @@ public class HomeController {
         int i = this.dao.update(item);
         return "redirect:/list";
     }
+
+    @GetMapping("/search_month")
+    String searchMonth(Model model, @RequestParam("month") String month){
+        List<TaskItem> taskItems = this.dao.searchMonth(month);
+        model.addAttribute("taskList", taskItems);
+        return "home";
+    }
 }
