@@ -39,12 +39,13 @@ public class HomeController {
     }
 
     @GetMapping("/add")
-    String addItem(@RequestParam("task") String task,
+    String addItem(Model model,
+                   @RequestParam("task") String task,
                    @RequestParam("deadline") String deadline){
         String id = UUID.randomUUID().toString().substring(0, 8);
         TaskItem item = new TaskItem(id, task, deadline, "",false);
         this.dao.add(item);
-        return "redirect:/list";
+        return listItems(model);
     }
 
     @GetMapping("/delete")
@@ -54,7 +55,7 @@ public class HomeController {
     }
 
     @GetMapping("/update")
-    String update(@RequestParam("id") String id,
+    String update(Model model, @RequestParam("id") String id,
                   @RequestParam("task") String task,
                   @RequestParam("deadline") String deadline,
                   @RequestParam("memo") String memo,
@@ -68,6 +69,7 @@ public class HomeController {
     String searchMonth(Model model, @RequestParam("month") String month){
         List<TaskItem> taskItems = this.dao.searchMonth(month);
         model.addAttribute("taskList", taskItems);
+        model.addAttribute("month", month);
         return "home";
     }
 }

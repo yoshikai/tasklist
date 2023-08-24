@@ -23,7 +23,7 @@
     <div>
         <form action="/search_month">
             <div class="row">
-                <div class="col"><input type="month" name="month"/></div>
+                <div class="col"><input type="month" name="month" th:value="${month}"/></div>
                 <div class="col">
                     <button type="submit" name="search_button" class="col btn btn-secondary btn-sm">検索</button>
                 </div>
@@ -90,6 +90,7 @@
         </div>
     </div>
 </div>
+
 
 <script language="JavaScript">
     function copyToDialog(row){
