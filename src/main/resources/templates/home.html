@@ -12,7 +12,7 @@
     <h2>タスクの登録</h2>
 <!--    <form action="/add">-->
         <label class="form-label">タスク</label>
-        <input name="task" class="form-control"　type="text" id="new_task" />
+        <input name="task" class="form-control" type="text" id="new_task" />
         <label class="form-label">期限</label>
         <input class="form-control" name="deadline" type="date" id="new_deadline"/>
         <input type="submit" value="登録" onclick="restAdd();" />
@@ -20,16 +20,25 @@
 </div>
 <div>
     <h2>現在のタスク一覧</h2>
-    <div>
-        <form action="/search_month">
-            <div class="row">
-                <div class="col"><input type="month" name="month" th:value="${month}"/></div>
-                <div class="col">
-                    <button type="submit" name="search_button" class="col btn btn-secondary btn-sm">検索</button>
+    <div class="row">
+        <div class="col">
+            <form action="/search">
+                <div class="row">
+                    <div class="col">
+                        <input type="month" name="month" th:value="${month}"/>
+                    </div>
+                    <div class="col">
+                        <label for="complete">未完了のみ</label>
+                        <input type="checkbox" name="complete" id="complete" th:checked="${complete}">
+                    </div>
+                    <div class="col">
+                        <button type="submit" name="search_button" class="col btn btn-secondary btn-sm">検索</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -92,7 +101,7 @@
 </div>
 
 
-<script language="JavaScript">
+<script>
     function copyToDialog(row){
         var children = $(row).children();
         $('#update_id').val($(children)[0].textContent);
@@ -149,7 +158,7 @@
                     <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#updatedialog" class="col btn btn-primary btn-sm" hidden>更新</button>
                 </td>
                 <td>
-                </td>
+                <td>
                     <form action="/delete">
                         <button type="submit" name="delete_button" class="col btn btn-secondary btn-sm" hidden>削除</button>
                         <input type="hidden" name="id" />

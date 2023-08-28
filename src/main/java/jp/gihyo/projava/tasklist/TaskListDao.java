@@ -35,16 +35,8 @@ public class TaskListDao {
     public <LIst> List<HomeController.TaskItem> findAll(){
         String query = "SELECT * FROM " + TABLE_NAME;
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
-        List<HomeController.TaskItem> list = result.stream().map(
-                (Map<String, Object> row) -> new HomeController.TaskItem(
-                        row.get("id").toString(),
-                        row.get("task").toString(),
-                        row.get("deadline").toString(),
-                        row.get("memo").toString(),
-                        (Boolean)row.get("done")
-
-                )).toList();
-                return list;
+        List<HomeController.TaskItem> list = getResult(result);
+        return list;
     }
 
     public int delete(String id){
@@ -62,9 +54,35 @@ public class TaskListDao {
         return number;
     }
 
-    public <LIst> List<HomeController.TaskItem> searchMonth(String month){
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE deadline like '" + month + "%'";
-        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
+    public <LIst> List<HomeController.TaskItem> search(String month, boolean isInComplete){
+        StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_NAME);
+        boolean isMonth = (month != null && month != "");   //monthに検索条件が入っているかのフラグ
+        if(isMonth){
+            query.append(" WHERE deadline like '" + month + "%'");
+        }
+        if(isInComplete){
+            if(isMonth){
+                query.append(" and done='0'");
+            }
+            else{
+                query.append(" WHERE done='0'");
+            }
+        }
+        //検索条件がない場合はfindAllで全部返す
+        if(query.isEmpty()){
+            return findAll();
+        }
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query.toString());
+        List<HomeController.TaskItem> list = getResult(result);
+        return list;
+    }
+
+    /**
+     * データベースからの取得処理を１つのメソッドにまとめておくと、修正も少なくてGood
+     * @param result
+     * @return
+     */
+    private List<HomeController.TaskItem> getResult(List<Map<String, Object>> result){
         List<HomeController.TaskItem> list = result.stream().map(
                 (Map<String, Object> row) -> new HomeController.TaskItem(
                         row.get("id").toString(),
