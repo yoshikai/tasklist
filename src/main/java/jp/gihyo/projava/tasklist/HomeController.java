@@ -65,11 +65,14 @@ public class HomeController {
         return "redirect:/list";
     }
 
-    @GetMapping("/search_month")
-    String searchMonth(Model model, @RequestParam("month") String month){
-        List<TaskItem> taskItems = this.dao.searchMonth(month);
+    @GetMapping("/search")
+    String search(Model model, @RequestParam("month") String month,
+                       @RequestParam(value = "complete", required = false) boolean isInComplete){
+        List<TaskItem> taskItems = this.dao.search(month, isInComplete);
         model.addAttribute("taskList", taskItems);
         model.addAttribute("month", month);
+        model.addAttribute("complete", isInComplete);
+
         return "home";
     }
 }
