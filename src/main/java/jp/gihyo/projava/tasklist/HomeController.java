@@ -61,13 +61,13 @@ public class HomeController {
                   @RequestParam("memo") String memo,
                   @RequestParam("done") boolean done){
         TaskItem item = new TaskItem(id, task, deadline, memo, done);
-        int i = this.dao.update(item);
+        this.dao.update(item);
         return "redirect:/list";
     }
 
     @GetMapping("/search")
     String search(Model model, @RequestParam("month") String month,
-                       @RequestParam(value = "complete", required = false) boolean isInComplete){
+                       @RequestParam(name = "complete", required = false) boolean isInComplete){
         List<TaskItem> taskItems = this.dao.search(month, isInComplete);
         model.addAttribute("taskList", taskItems);
         model.addAttribute("month", month);
